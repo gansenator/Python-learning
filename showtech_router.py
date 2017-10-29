@@ -29,12 +29,21 @@ except:
 showtech_files = []
 
 #Greping exact file name from the show tech output and storing in a list
-if (re.search(r'',output)):
-    showtech_files.append(re.search(r'',output).group(2))
+if (re.search(r'Show tech output available at (.*) : /harddisk:/showtech/(.*)',str(output))):
+    showtech_files.append(re.search(r'Show tech output available at (.*) : /harddisk:/showtech/(.*)',str(output)).group(2))
 
-#check for TFT pserver reachability from router
+#check for TFTP server reachability from router
 try:
     output = router_console.send_command_expect("ping 223.255.254.254",delay_factor=10)
 except:
-    print "could not execute TFTP server ping. Exiting Grcefully"
-   
+    print "could not execute TFTP server ping. Exiting Gracefully"
+ 
+ping_percentage = int(re.search(r'Success rate is (\d{1,3}) percent',str(output)).group(1))
+if ping_percentage == 100:
+    Print "TFTP server is Reachable. Ready to copy Show tech files to TFTP server"
+    for files in showtech_files:
+        try:
+            router_console.send_command("copy harddisk:/showtech/files tftp://223.255.254.254/auto/tftp-blr-users3/gponnusa/")
+        except:
+            print "TFTP Copy Failed. Exiting Gracefully"
+            
