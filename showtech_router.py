@@ -34,7 +34,7 @@ if (re.search(r'Show tech output available at (.*) : /harddisk:/showtech/(.*)',s
 
 #check for TFTP server reachability from router
 try:
-    output = router_console.send_command_expect("ping 223.255.254.254",delay_factor=10)
+    output = router_console.send_command_expect("ping 1.99.0.7",delay_factor=10)
 except:
     print "could not execute TFTP server ping. Exiting Gracefully"
  
@@ -43,7 +43,14 @@ if ping_percentage == 100:
     Print "TFTP server is Reachable. Ready to copy Show tech files to TFTP server"
     for files in showtech_files:
         try:
-            router_console.send_command("copy harddisk:/showtech/files tftp://223.255.254.254/auto/tftp-blr-users3/gponnusa/")
+            router_console.send_command_expect("copy harddisk:/showtech/files tftp://1.99.0.7/auto/tftp-blr-users3/gponnusa/",expect_string='')
         except:
             print "TFTP Copy Failed. Exiting Gracefully"
+            
+        try:
+            output = router_console.send_command_expect("\n",expect_string='')
+        except:
+            print "TFTP Copy Failed. Exiting Gracefully"
+           
+            
             
