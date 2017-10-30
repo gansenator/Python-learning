@@ -40,7 +40,7 @@ except:
  
 ping_percentage = int(re.search(r'Success rate is (\d{1,3}) percent',str(output)).group(1))
 if ping_percentage == 100:
-    Print "TFTP server is Reachable. Ready to copy Show tech files to TFTP server"
+    print "TFTP server is Reachable. Ready to copy Show tech files to TFTP server"
     for files in showtech_files:
         try:
             router_console.send_command_expect("copy harddisk:/showtech/files tftp://1.99.0.7/auto/tftp-blr-users3/gponnusa/",expect_string='')
